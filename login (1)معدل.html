@@ -1,0 +1,1930 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Link Up - نظام المصادقة">
+    <title>Link Up | تسجيل الدخول</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <style>
+:root {
+    --primary: #214f80;
+    --primary-dark: #173e67;
+    --accent: #e9a027;
+    --text: #163a61;
+    --muted: #7d8998;
+    --white: #ffffff;
+    --input-border: #8ea9c4;
+    --shadow: 0 22px 55px rgba(33, 79, 128, 0.16);
+    --success: #2c8b5e;
+    --error: #c65353;
+}
+
+
+/* =========================================================
+   Global reset: قواعد عامة مشتركة بين جميع الشاشات
+   ========================================================= */
+*, *::before, *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    min-height: 100%;
+}
+
+/* body: الخلفية العامة للصفحات الثلاث */
+body {
+    min-height: 100vh;
+    font-family: "Tajawal", sans-serif;
+    color: var(--text);
+    background-image: url(assests/bg-cover.jpg);    
+    background-repeat: no-repeat;
+    background-size: cover;
+    overflow-x: hidden;
+}
+
+/* body overlay: طبقة شفافة خفيفة فوق الخلفية */
+/*
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.08);
+    pointer-events: none;
+}*/
+
+/* screen: حاوية كل شاشة يتم إظهار واحدة منها فقط */
+.screen {
+    min-height: 100vh;
+    width: 100%;
+    display: none;
+    place-items: center;
+    padding: 28px 18px;
+    position: relative;
+    z-index: 1;
+}
+
+/* screen.active: الشاشة الحالية الظاهرة للمستخدم */
+.screen.active {
+    display: grid;
+}
+
+/* screen inactive: منع التفاعل مع الشاشة المخفية */
+.screen:not(.active) {
+    pointer-events: none;
+}
+
+/* screen active: السماح بالتفاعل مع الشاشة الحالية */
+.screen.active {
+    pointer-events: auto;
+}
+
+/* navigation transition: حركة بسيطة عند تبديل الشاشات */
+.screen.active .auth-card {
+    animation: pageEnter 0.45s ease both;
+}
+
+/* pageEnter: دخول البطاقة عند الانتقال لشاشة جديدة */
+@keyframes pageEnter {
+    from {
+        opacity: 0;
+        transform: translateY(18px) scale(0.985);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ================= index.html styles ================= */
+
+        /* =========================================================
+           01) Root variables: ألوان وثوابت التصميم الأساسية
+           ========================================================= */
+        
+
+        /* =========================================================
+           02) Global reset: توحيد الـ margins والـ box sizing
+           ========================================================= */
+        .screen-login *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* =========================================================
+           03) Body: خلفية الصفحة وتوسيط بطاقة الدخول
+           ========================================================= */
+        
+
+        /* =========================================================
+           04) Page overlay: طبقة خفيفة لتحسين وضوح البطاقة
+           ========================================================= */
+        
+
+        /* =========================================================
+           05) Auth card: البطاقة الزجاجية الرئيسية للنموذج
+           ========================================================= */
+        .screen-login .auth-card{
+            width: min(100%, 430px);
+            padding: 42px 40px 34px;
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            border-radius: 28px;
+         /*   background: linear-gradient(180deg, rgba(255, 255, 255, 0.91), rgba(224, 233, 243, 0.84));*/
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            animation: cardEnter 0.8s ease both;
+        }
+
+        /* =========================================================
+           06) Brand: شعار Link Up أعلى البطاقة
+           ========================================================= */
+        .screen-login .brand{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        /* =========================================================
+           07) Brand logo: صورة اللوجو
+           ========================================================= */
+        .screen-login .brand__logo{
+            width: 96px;
+            height: 78px;
+            object-fit: contain;
+        }
+
+        /* =========================================================
+           08) Brand name: اسم Link Up أسفل الشعار
+           ========================================================= */
+        .screen-login .brand__name{
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 800;
+            color: var(--text);
+            direction: ltr;
+        }
+
+        /* =========================================================
+           09) Welcome text: عبارة الترحيب البرتقالية
+           ========================================================= */
+        .screen-login .welcome{
+            margin-top: 6px;
+            margin-bottom: 4px;
+            text-align: center;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        /* =========================================================
+           10) Main title: عنوان تسجيل الدخول
+           ========================================================= */
+        .screen-login .page-title{
+            margin-bottom: 22px;
+            text-align: center;
+            font-size: clamp(26px, 5vw, 31px);
+            line-height: 1.25;
+            font-weight: 800;
+            color: var(--text);
+        }
+
+        /* =========================================================
+           11) Auth form: تجميع عناصر نموذج تسجيل الدخول
+           ========================================================= */
+        .screen-login .auth-form{
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* =========================================================
+           12) Input group: حاوية الحقول والأيقونات
+           ========================================================= */
+        .screen-login .input-group{
+            position: relative;
+        }
+
+        /* =========================================================
+           13) Input: شكل حقول البريد وكلمة المرور
+           ========================================================= */
+        .screen-login .input-group input{
+            width: 100%;
+            height: 48px;
+            padding: 0 44px 0 44px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 13px;
+            outline: none;
+            background: #fffffff2;
+            color: #22374d;
+            font-family: inherit;
+            font-size: 14px;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        /* =========================================================
+           14) Input focus: تأثير التركيز على الحقل
+           ========================================================= */
+        .screen-login .input-group input:focus{
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent);
+            transform: translateY(-1px);
+        }
+
+        /* =========================================================
+           15) Floating label: العنوان الصغير فوق الحقل
+           ========================================================= */
+        .screen-login .input-label{
+            position: absolute;
+            top: -9px;
+            right: 17px;
+            padding: 0 6px;
+            background: #eff4f9f5;
+            color: #67778a;
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 2;
+        }
+
+        /* =========================================================
+           16) Field icon: أيقونة الحقل الموجودة على اليمين
+           ========================================================= */
+        .screen-login .field-icon{
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: var(--text);
+            font-size: 19px;
+            pointer-events: none;
+        }
+
+        /* =========================================================
+           17) Password toggle: زر إظهار وإخفاء كلمة المرور
+           ========================================================= */
+        .screen-login .password-toggle{
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            width: 28px;
+            height: 28px;
+            border: 0;
+            background: transparent;
+            color: #7895b4;
+            font-size: 19px;
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        /* =========================================================
+           18) Form options: صف تذكرني ونسيت كلمة المرور
+           ========================================================= */
+        .screen-login .form-options{
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 14px;
+            margin-top: -2px;
+        }
+
+        /* =========================================================
+           19) Remember me: مجموعة خيار تذكرني
+           ========================================================= */
+        .screen-login .remember-me{
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: #516173;
+            font-size: 13px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        /* =========================================================
+           20) Remember checkbox: شكل خانة الاختيار
+           ========================================================= */
+        .screen-login .remember-me input{
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           21) Text link: الروابط مثل نسيت كلمة المرور
+           ========================================================= */
+        .screen-login .text-link{
+            color: var(--text);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 700;
+            transition: color 0.2s ease;
+        }
+
+        /* =========================================================
+           22) Text link hover: تأثير المرور على الروابط
+           ========================================================= */
+        .screen-login .text-link:hover{
+            color: var(--accent);
+        }
+
+        /* =========================================================
+           23) Primary button: زر تسجيل الدخول الرئيسي
+           ========================================================= */
+        .screen-login .primary-btn{
+            min-height: 48px;
+            border: 0;
+            border-radius: 12px;
+            background: var(--primary);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 17px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 14px 25px #214f802e;
+            transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        /* =========================================================
+           24) Primary button hover: تأثير المرور والضغط على الزر
+           ========================================================= */
+        .screen-login .primary-btn:hover{
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 18px 28px #214f803d;
+        }
+
+        /* =========================================================
+           25) Primary button active: تأثير الضغط السريع
+           ========================================================= */
+        .screen-login .primary-btn:active{
+            transform: translateY(0);
+        }
+
+        /* =========================================================
+           26) Bottom prompt: النص السفلي لإنشاء حساب جديد
+           ========================================================= */
+        .screen-login .bottom-prompt{
+            margin-top: 14px;
+            text-align: center;
+            font-size: 14px;
+            color: #586b7e;
+        }
+
+        /* =========================================================
+           27) Accent link: الجزء البرتقالي من النص السفلي
+           ========================================================= */
+        .screen-login .accent-link{
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           28) Create account link: رابط إنشاء حساب جديد
+           ========================================================= */
+        .screen-login .create-link{
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 800;
+            transition: color 0.2s ease;
+        }
+
+        .screen-login .create-link:hover{
+            color: var(--accent);
+            transform: translateY(-2px);
+            box-shadow: 0 18px 28px #214f803d;
+        }
+        /* =========================================================
+           29) Button icon: أيقونة السهم داخل الزر
+           ========================================================= */
+        .screen-login .btn-icon{
+            font-size: 21px;
+            line-height: 1;
+        }
+
+        /* =========================================================
+           30) Card entrance animation: دخول البطاقة عند فتح الصفحة
+           ========================================================= */
+        @keyframes cardEnter {
+            from {
+                opacity: 0;
+                transform: translateY(28px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* =========================================================
+           31) Responsive: تحسين التصميم على الشاشات الصغيرة
+           ========================================================= */
+        @media (max-width: 600px) {
+            
+
+            .screen-login .auth-card{
+                padding: 34px 22px 28px;
+                border-radius: 24px;
+            }
+
+            .screen-login .brand__logo{
+                width: 88px;
+                height: 70px;
+            }
+
+            .screen-login .form-options{
+                align-items: flex-start;
+            }
+
+            .screen-login .remember-me, .screen-login .text-link{
+                font-size: 12px;
+            }
+        }
+    
+/* ================= forget.html styles ================= */
+
+        /* =========================================================
+           01) Root variables: ألوان وثوابت التصميم الأساسية
+           ========================================================= */
+        
+
+        /* =========================================================
+           02) Global reset: توحيد الـ margins والـ box sizing
+           ========================================================= */
+        .screen-forget *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* =========================================================
+           03) Body: الخلفية وتوسيط بطاقة الاستعادة
+           ========================================================= */
+        
+
+        /* =========================================================
+           04) Auth card: البطاقة الزجاجية الرئيسية
+           ========================================================= */
+        .screen-forget .auth-card{
+            width: min(100%, 430px);
+            padding: 42px 40px 34px;
+            
+            border-radius: 28px;
+            background-color: #ffffffe8;
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            overflow: hidden;
+            animation: cardEnter 0.8s ease both;
+        }
+
+        /* =========================================================
+           05) Brand: شعار Link Up أعلى البطاقة
+           ========================================================= */
+        .screen-forget .brand{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 14px;
+        }
+
+        /* =========================================================
+           06) Brand logo: صورة الشعار
+           ========================================================= */
+        .screen-forget .brand__logo{
+            width: 96px;
+            height: 78px;
+            object-fit: contain;
+        }
+
+        /* =========================================================
+           07) Brand name: اسم Link Up
+           ========================================================= */
+        .screen-forget .brand__name{
+            font-size: 24px;
+            line-height: 1;
+            font-weight: 800;
+            color: var(--text);
+            direction: ltr;
+        }
+
+        /* =========================================================
+           08) Step content: المساحة المتحركة بين نموذج البريد والتحقق
+           ========================================================= */
+        .screen-forget .steps{
+            position: relative;
+            min-height: 322px;
+        }
+
+        /* =========================================================
+           09) Step: كل شاشة داخل مسار الاستعادة
+           ========================================================= */
+        .screen-forget .step{
+            width: 100%;
+            transition: transform 0.55s cubic-bezier(0.2, 0.75, 0.2, 1), opacity 0.45s ease;
+            will-change: transform, opacity;
+        }
+
+        /* =========================================================
+           10) Step recovery: الحالة الطبيعية لصفحة إدخال البريد
+           ========================================================= */
+        .screen-forget .step--recovery{
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        /* =========================================================
+           11) Step validation: الحالة الطبيعية لصفحة رمز التحقق
+           ========================================================= */
+        .screen-forget .step--validation{
+            position: absolute;
+            inset: 0;
+            transform: translateX(110%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* =========================================================
+           12) Steps validation mode: تشغيل الحركة إلى نموذج التحقق
+           ========================================================= */
+        .screen-forget .steps.is-validation .step--recovery{
+            transform: translateX(-110%);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* =========================================================
+           13) Steps validation mode: إظهار نموذج التحقق
+           ========================================================= */
+        .screen-forget .steps.is-validation .step--validation{
+            transform: translateX(0);
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        /* =========================================================
+           14) Step heading: العنوان والوصف داخل كل خطوة
+           ========================================================= */
+        .screen-forget .step-heading{
+            text-align: center;
+            margin-bottom: 22px;
+        }
+
+        /* =========================================================
+           15) Eyebrow: العنوان البرتقالي الصغير
+           ========================================================= */
+        .screen-forget .eyebrow{
+            margin-bottom: 5px;
+            color: var(--accent);
+            font-size: 14px;
+            font-weight: 800;
+        }
+
+        /* =========================================================
+           16) Page title: العنوان الرئيسي للخطوة
+           ========================================================= */
+        .screen-forget .page-title{
+            color: var(--text);
+            font-size: clamp(25px, 5vw, 20px);
+            line-height: 1.35;
+            font-weight: 800;
+        }
+
+        /* =========================================================
+           17) Step description: الوصف التوضيحي تحت العنوان
+           ========================================================= */
+        .screen-forget .step-description{
+            max-width: 330px;
+            margin: 8px auto 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* =========================================================
+           18) Auth form: نموذج البريد الإلكتروني
+           ========================================================= */
+        .screen-forget .auth-form{
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* =========================================================
+           19) Input group: حاوية الحقل
+           ========================================================= */
+        .screen-forget .input-group{
+            position: relative;
+        }
+
+        /* =========================================================
+           20) Input label: عنوان الحقل الصغير
+           ========================================================= */
+        .screen-forget .input-label{
+            position: absolute;
+            top: -9px;
+            right: 17px;
+            padding: 0 6px;
+            background: #eff4f9f5;
+            color: #67778a;
+            font-size: 12px;
+            font-weight: 500;
+            z-index: 2;
+        }
+
+        /* =========================================================
+           21) Input: حقل البريد الإلكتروني
+           ========================================================= */
+        .screen-forget .input-group input{
+            width: 100%;
+            height: 48px;
+            padding: 0 44px;
+            border: 1.5px solid var(--input-border);
+            border-radius: 13px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.95);
+            color: #22374d;
+            font-family: inherit;
+            font-size: 14px;
+            text-align: right;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        /* =========================================================
+           22) Input focus: تأثير التركيز على الحقل
+           ========================================================= */
+        .screen-forget .input-group input:focus{
+            border-color: var(--accent);
+            box-shadow: 0 0 0 1px var(--accent);
+            transform: translateY(-1px);
+        }
+
+        /* =========================================================
+           23) Field icon: أيقونة البريد داخل الحقل على اليمين
+           ========================================================= */
+        .screen-forget .field-icon{
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: #7895b4;
+            font-size: 19px;
+            pointer-events: none;
+        }
+
+        /* =========================================================
+           24) Primary button: زر إرسال رابط التحقق أو تأكيد الكود
+           ========================================================= */
+        .screen-forget .primary-btn{
+            min-height: 48px;
+            border: 0;
+            border-radius: 12px;
+            background: var(--primary);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 15px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 14px 25px #214f802e;
+            transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        /* =========================================================
+           25) Primary button hover: حركة الزر عند المرور عليه
+           ========================================================= */
+        .screen-forget .primary-btn:hover{
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 18px 28px rgba(33, 79, 128, 0.24);
+        }
+
+        /* =========================================================
+           26) Primary button active: تأثير الضغط على الزر
+           ========================================================= */
+        .screen-forget .primary-btn:active{
+            transform: translateY(0);
+            background-color: var(--accent);
+        }
+
+        /* =========================================================
+           27) Back link: رابط العودة لتسجيل الدخول
+           ========================================================= */
+        .screen-forget .back-link{
+            width: fit-content;
+            margin: 14px auto 0;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 800;
+            transition: color 0.22s ease, transform 0.22s ease;
+        }
+
+        /* =========================================================
+           28) Back link hover: تأثير المرور على رابط العودة
+           ========================================================= */
+        .screen-forget .back-link:hover{
+            color: var(--accent);
+            transform: translateX(-2px);
+        }
+
+        /* =========================================================
+           29) OTP heading: المسافة الخاصة بعنوان التحقق
+           ========================================================= */
+        .screen-forget .otp-heading{
+            margin-bottom: 12px;
+        }
+
+        /* =========================================================
+           30) Masked email: البريد المموه أسفل عنوان التحقق
+           ========================================================= */
+        .screen-forget .masked-email{
+            margin-top: 8px;
+            color: var(--text);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        /* =========================================================
+           31) Mask highlight: الجزء البرتقالي من البريد المموه
+           ========================================================= */
+        .screen-forget .mask-highlight{
+            color: var(--accent);
+            font-weight: 800;
+            direction: ltr;
+            display: inline-block;
+        }
+
+        /* =========================================================
+           32) OTP helper: النص الصغير فوق حقول الرمز
+           ========================================================= */
+        .screen-forget .otp-helper{
+            margin-bottom: 10px;
+            color: var(--muted);
+            text-align: center;
+            font-size: 12px;
+        }
+
+        /* =========================================================
+           33) OTP fields: صف حقول رمز التحقق
+           ========================================================= */
+        .screen-forget .otp-inputs{
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            direction: ltr;
+            margin-bottom: 16px;
+        }
+
+        /* =========================================================
+           34) OTP input: كل مربع من مربعات رمز التحقق
+           ========================================================= */
+        .screen-forget .otp-input{
+            width: 100%;
+            height: 60px;
+            border: 1.5px solid #8ea9c4e6;
+            border-radius: 12px;
+            background: #fffffff5;
+            outline: none;
+            text-align: center;
+            color: var(--text);
+            font-size: 22px;
+            font-weight: 800;
+            font-family: inherit;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        /* =========================================================
+           35) OTP input focus: تأثير التركيز على مربع الرمز
+           ========================================================= */
+        .screen-forget .otp-input:focus{
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* =========================================================
+           36) OTP status: رسالة الوقت وإعادة الإرسال
+           ========================================================= */
+        .screen-forget .otp-status{
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            margin-bottom: 4px;
+            color: var(--muted);
+            font-size: 12px;
+            text-align: center;
+        }
+
+        /* =========================================================
+           37) Resend button: رابط إعادة إرسال الرمز
+           ========================================================= */
+        .screen-forget .resend-btn{
+            border: 0;
+            padding: 0;
+            background: transparent;
+            color: var(--accent);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           38) Resend button disabled: حالة تعطيل إعادة الإرسال
+           ========================================================= */
+        .screen-forget .resend-btn:disabled{
+            cursor: not-allowed;
+            opacity: 0.55;
+        }
+
+        /* =========================================================
+           39) Countdown: عداد الوقت المتبقي
+           ========================================================= */
+        .screen-forget .countdown{
+            color: var(--accent);
+            font-weight: 800;
+            direction: ltr;
+            display: inline-block;
+            min-width: 38px;
+        }
+
+        /* =========================================================
+           40) Validation message: رسائل نجاح أو خطأ رمز التحقق
+           ========================================================= */
+        .screen-forget .validation-message{
+            min-height: 20px;
+            margin-top: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        /* =========================================================
+           41) Validation success: شكل رسالة النجاح
+           ========================================================= */
+        .screen-forget .validation-message.success{
+            color: var(--success);
+        }
+
+        /* =========================================================
+           42) Validation error: شكل رسالة الخطأ
+           ========================================================= */
+        .screen-forget .validation-message.error{
+            color: var(--error);
+        }
+
+        /* =========================================================
+           43) Validation footer: الروابط أسفل صفحة التحقق
+           ========================================================= */
+        .screen-forget .validation-footer{
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            margin-top: 13px;
+            font-size: 12px;
+        }
+
+        /* =========================================================
+           44) Footer action: روابط إجراءات التحقق السفلية
+           ========================================================= */
+        .screen-forget .footer-action{
+            border: 0;
+            background: transparent;
+            padding: 0;
+            color: var(--primary);
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* =========================================================
+           45) Footer separator: الفاصل بين الروابط السفلية
+           ========================================================= */
+        .screen-forget .footer-separator{
+            color: #a5b0bc;
+        }
+
+        /* =========================================================
+           46) Button icon: أيقونة السهم داخل الأزرار
+           ========================================================= */
+        .screen-forget .btn-icon{
+            font-size: 20px;
+            line-height: 1;
+        }
+
+        /* =========================================================
+           47) Card animation: دخول بطاقة الاستعادة
+           ========================================================= */
+        @keyframes cardEnter {
+            from {
+                opacity: 0;
+                transform: translateY(28px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* =========================================================
+           48) Responsive: تحسين التصميم للشاشات الصغيرة
+           ========================================================= */
+        @media (max-width: 600px) {
+            
+
+            .screen-forget .auth-card{
+                padding: 34px 22px 28px;
+                border-radius: 24px;
+            }
+
+            .screen-forget .brand__logo{
+                width: 88px;
+                height: 70px;
+            }
+
+            .screen-forget .steps{
+                min-height: 325px;
+            }
+
+            .screen-forget .otp-inputs{
+                gap: 7px;
+            }
+
+            .screen-forget .otp-input{
+                height: 54px;
+            }
+        }
+    
+/* ================= reset password styles ================= */
+
+        /* =========================================================
+           01) Root variables: ألوان وثوابت التصميم الأساسية
+           ========================================================= */
+        
+
+        /* =========================================================
+           02) Global reset: توحيد الـ margins والـ box sizing
+           ========================================================= */
+        .screen-reset *{
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* =========================================================
+           03) Body: خلفية الصفحة وتوسيط بطاقة إعادة التعيين
+           ========================================================= */
+        
+
+        /* =========================================================
+           04) Page overlay: طبقة خفيفة لتحسين وضوح البطاقة
+           ========================================================= */
+        
+
+        /* =========================================================
+           05) Auth card: البطاقة الزجاجية الرئيسية للنموذج
+           ========================================================= */
+        .screen-reset .auth-card{
+            width: min(100%, 440px);
+            padding: 42px 36px 34px;
+            border: 1px solid rgba(255, 255, 255, 0.65);
+            border-radius: 28px;
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.91), rgba(224, 233, 243, 0.84));
+            box-shadow: var(--shadow);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            animation: cardEnter 0.8s ease both;
+        }
+
+        /* =========================================================
+           06) Brand: منطقة الشعار واسم المنصة
+           ========================================================= */
+        .screen-reset .brand{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 28px;
+        }
+
+        /* =========================================================
+           07) Brand logo: صورة شعار Link Up
+           ========================================================= */
+        .screen-reset .brand__logo{
+            width: 84px;
+            height: 68px;
+            object-fit: contain;
+        }
+
+        /* =========================================================
+           08) Brand name: اسم Link Up أسفل الشعار
+           ========================================================= */
+        .screen-reset .brand__name{
+            font-size: 23px;
+            line-height: 1;
+            font-weight: 800;
+            color: var(--text);
+            direction: ltr;
+        }
+
+        /* =========================================================
+           09) Step heading: عنوان الصفحة والوصف التوضيحي
+           ========================================================= */
+        .screen-reset .step-heading{
+            text-align: center;
+            margin-bottom: 26px;
+        }
+
+        /* =========================================================
+           10) Eyebrow: العنوان البرتقالي الصغير فوق العنوان الرئيسي
+           ========================================================= */
+        .screen-reset .eyebrow{
+            margin-bottom: 8px;
+            color: var(--accent);
+            font-size: 13px;
+            font-weight: 800;
+        }
+
+        /* =========================================================
+           11) Page title: عنوان إعادة تعيين كلمة المرور
+           ========================================================= */
+        .screen-reset .page-title{
+            color: var(--text);
+            font-size: clamp(25px, 5vw, 30px);
+            line-height: 1.35;
+            font-weight: 800;
+        }
+
+        /* =========================================================
+           12) Step description: النص التوضيحي أسفل العنوان
+           ========================================================= */
+        .screen-reset .step-description{
+            max-width: 330px;
+            margin: 8px auto 0;
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* =========================================================
+           13) Auth form: نموذج كلمة المرور الجديدة
+           ========================================================= */
+        .screen-reset .auth-form{
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* =========================================================
+           14) Input group: حاوية كل حقل مع الأيقونة والعنوان
+           ========================================================= */
+        .screen-reset .input-group{
+            position: relative;
+        }
+
+        /* =========================================================
+           15) Input label: عنوان الحقل فوق مربع الإدخال
+           ========================================================= */
+        .screen-reset .input-label{
+            position: absolute;
+            top: -9px;
+            right: 18px;
+            padding: 0 6px;
+            background: rgba(238, 244, 249, 0.96);
+            color: #4d6075;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 2;
+        }
+
+        /* =========================================================
+           16) Input: حقول كلمة المرور الجديدة وتأكيدها
+           ========================================================= */
+        .screen-reset .input-group input{
+            width: 100%;
+            height: 46px;
+            padding: 0 44px;
+            border: 1.5px solid rgba(255, 255, 255, 0.85);
+            border-radius: 13px;
+            outline: none;
+            background: rgba(255, 255, 255, 0.96);
+            color: #22374d;
+            font-family: inherit;
+            font-size: 14px;
+            text-align: right;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        /* =========================================================
+           17) Input focus: تأثير التركيز على الحقل
+           ========================================================= */
+        .screen-reset .input-group input:focus{
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(33, 79, 128, 0.10);
+            transform: translateY(-1px);
+        }
+
+        /* =========================================================
+           18) Field icon: أيقونة القفل داخل الحقل
+           ========================================================= */
+        .screen-reset .field-icon{
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            color: #9aa8b7;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        /* =========================================================
+           19) Password toggle: زر إظهار وإخفاء كلمة المرور
+           ========================================================= */
+        .screen-reset .password-toggle{
+            position: absolute;
+            top: 50%;
+            left: 14px;
+            width: 28px;
+            height: 28px;
+            border: 0;
+            background: transparent;
+            color: #96a3b2;
+            font-size: 18px;
+            cursor: pointer;
+            transform: translateY(-50%);
+        }
+
+        /* =========================================================
+           20) Password rules: صندوق شروط كلمة المرور
+           ========================================================= */
+        .screen-reset .password-rules{
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 12px;
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.94);
+            color: #8b8f97;
+            font-size: 11px;
+            line-height: 1.7;
+        }
+
+        /* =========================================================
+           21) Password rules icon: أيقونة المعلومة بجانب الشروط
+           ========================================================= */
+        .screen-reset .password-rules__icon{
+            flex: 0 0 auto;
+            color: var(--accent);
+            font-size: 15px;
+        }
+
+        /* =========================================================
+           22) Validation text: رسائل نجاح أو خطأ التحقق
+           ========================================================= */
+        .screen-reset .validation-message{
+            min-height: 22px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 700;
+            line-height: 1.6;
+        }
+
+        /* =========================================================
+           23) Validation success: رسالة نجاح حفظ كلمة المرور
+           ========================================================= */
+        .screen-reset .validation-message.success{
+            color: var(--success);
+        }
+
+        /* =========================================================
+           24) Validation error: رسالة خطأ عند عدم تطابق الشروط
+           ========================================================= */
+        .screen-reset .validation-message.error{
+            color: var(--error);
+        }
+
+        /* =========================================================
+           25) Primary button: زر حفظ كلمة المرور والدخول
+           ========================================================= */
+        .screen-reset .primary-btn{
+            min-height: 50px;
+            border: 0;
+            border-radius: 11px;
+            background: var(--primary);
+            color: var(--white);
+            font-family: inherit;
+            font-size: 16px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 14px 25px rgba(33, 79, 128, 0.18);
+            transition: transform 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+        }
+
+        /* =========================================================
+           26) Primary button hover: حركة الزر عند المرور عليه
+           ========================================================= */
+        .screen-reset .primary-btn:hover{
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 18px 28px rgba(33, 79, 128, 0.24);
+        }
+
+        /* =========================================================
+           27) Primary button active: تأثير الضغط على الزر
+           ========================================================= */
+        .screen-reset .primary-btn:active{
+            transform: translateY(0);
+        }
+
+        /* =========================================================
+           28) Primary button disabled: تعطيل الزر عند عدم اكتمال البيانات
+           ========================================================= */
+        .screen-reset .primary-btn:disabled{
+            cursor: not-allowed;
+            opacity: 0.65;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* =========================================================
+           29) Back link: رابط العودة إلى صفحة تسجيل الدخول
+           ========================================================= */
+        .screen-reset .back-link{
+            width: fit-content;
+            margin: 14px auto 0;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 800;
+            transition: color 0.22s ease, transform 0.22s ease;
+        }
+
+        /* =========================================================
+           30) Back link hover: حركة رابط العودة
+           ========================================================= */
+        .screen-reset .back-link:hover{
+            color: var(--primary-dark);
+            transform: translateX(-2px);
+        }
+
+        /* =========================================================
+           31) Button icon: أيقونة السهم داخل الزر
+           ========================================================= */
+        .screen-reset .btn-icon{
+            font-size: 21px;
+            line-height: 1;
+        }
+
+        /* =========================================================
+           32) Card entrance animation: ظهور البطاقة بحركة خفيفة
+           ========================================================= */
+        @keyframes cardEnter {
+            from {
+                opacity: 0;
+                transform: translateY(28px) scale(0.98);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* =========================================================
+           33) Success animation: حركة رسالة نجاح الانتقال
+           ========================================================= */
+        @keyframes successPulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            50% {
+                opacity: 0.72;
+                transform: translateY(-1px);
+            }
+        }
+
+        /* =========================================================
+           34) Success state: تشغيل الحركة بعد نجاح الحفظ
+           ========================================================= */
+        .screen-reset .validation-message.success{
+            animation: successPulse 0.9s ease-in-out 2;
+        }
+
+        /* =========================================================
+           35) Responsive: تحسين التصميم على الشاشات الصغيرة
+           ========================================================= */
+        @media (max-width: 600px) {
+            
+
+            .screen-reset .auth-card{
+                padding: 34px 22px 28px;
+                border-radius: 24px;
+            }
+
+            .screen-reset .brand{
+                margin-bottom: 24px;
+            }
+
+            .screen-reset .brand__logo{
+                width: 78px;
+                height: 62px;
+            }
+        }
+    
+    </style>
+</head>
+<body>
+<section class="screen screen-login" id="screen-login" aria-hidden="true">
+<main class="auth-card" aria-labelledby="login-title">
+        <!-- brand: شعار واسم المنصة -->
+        <div class="brand">
+            <img class="brand__logo" src="assests/logo2.png" alt="Link Up Logo">
+            <span class="brand__name">Link Up</span>
+        </div>
+
+        <!-- welcome: رسالة الترحيب -->
+        <p class="welcome">مرحباً بك مجدداً</p>
+
+        <!-- page-title: عنوان الصفحة -->
+        <h1 class="page-title" id="login-title">تسجيل دخول</h1>
+
+        <!-- auth-form: نموذج تسجيل الدخول -->
+        <form class="auth-form" id="loginForm" novalidate>
+            <!-- input-group: حقل البريد الإلكتروني -->
+            <div class="input-group">
+                <label class="input-label" for="email">البريد الإلكتروني</label>
+                <i class="bi bi-envelope field-icon" aria-hidden="true"></i>
+                <input id="email" name="email" type="email" placeholder="" autocomplete="email" required>
+            </div>
+
+            <!-- input-group: حقل كلمة المرور -->
+            <div class="input-group">
+                <label class="input-label" for="password">كلمة المرور</label>
+                <i class="bi bi-lock field-icon" aria-hidden="true"></i>
+                <input id="password" name="password" type="password" placeholder="" autocomplete="current-password" required>
+                <button class="password-toggle" type="button" id="passwordToggle" aria-label="إظهار كلمة المرور">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <!-- form-options: تذكرني + رابط نسيت كلمة المرور -->
+            <div class="form-options">
+                <a class="text-link" id="forgotLink" href="#">هل نسيت كلمة المرور؟</a>
+
+                <!-- remember-me: خيار تذكر بيانات الدخول -->
+                <label class="remember-me" for="rememberMe">
+                    <input id="rememberMe" name="rememberMe" type="checkbox">
+                    <span>تذكرني</span>
+                </label>
+            </div>
+
+            <!-- primary-btn: زر تسجيل الدخول -->
+            <button class="primary-btn" type="submit">
+                <span>تسجيل دخول</span>
+                <i class="bi bi-arrow-left btn-icon" aria-hidden="true"></i>
+            </button>
+        </form>
+
+        <!-- bottom-prompt: رابط إنشاء حساب جديد -->
+        <p class="bottom-prompt">
+            <span class="accent-link">ليس لديك حساب؟</span>
+            <a class="create-link" href="#">إنشاء حساب جديد</a>
+        </p>
+    </main>
+</section>
+
+<section class="screen screen-forget" id="screen-forget" aria-hidden="true">
+<main class="auth-card" aria-label="استعادة الحساب والتحقق">
+        <!-- brand: شعار واسم المنصة -->
+        <div class="brand">
+            <img class="brand__logo" src="assests/logo2.png" alt="Link Up Logo">
+            <span class="brand__name">Link Up</span>
+        </div>
+
+        <!-- steps: الحاوية التي تتحرك داخلها خطوات الاستعادة -->
+        <div class="steps" id="steps">
+            <!-- step--recovery: الشاشة الأولى لإدخال البريد -->
+            <section class="step step--recovery" id="recoveryStep" aria-labelledby="recoveryTitle">
+                <!-- step-heading: عنوان ووصف شاشة استعادة الحساب -->
+                <div class="step-heading">
+                    <p class="eyebrow">استعادة الحساب</p>
+                    <h2 class="page-title" id="recoveryTitle">نسيت كلمة المرور</h2>
+                    <p class="step-description">
+                        أدخل بريدك الإلكتروني المسجل وسنرسل لك رابط لإعادة تعيين كلمة المرور.
+                    </p>
+                </div>
+
+                <!-- auth-form: نموذج البريد الإلكتروني -->
+                <form class="auth-form" id="recoveryForm" novalidate>
+                    <!-- input-group: حقل البريد الإلكتروني لإرسال رابط التحقق -->
+                    <div class="input-group">
+                        <label class="input-label" for="recoveryEmail">البريد الإلكتروني</label>
+                        <i class="bi bi-envelope field-icon" aria-hidden="true"></i>
+                        <input id="recoveryEmail" name="recoveryEmail" type="email" autocomplete="email" placeholder="" required>
+                    </div>
+
+                    <!-- primary-btn: إرسال رابط التحقق -->
+                    <button class="primary-btn" type="submit">
+                        <span>إرسال رابط التحقق</span>
+                        <i class="bi bi-arrow-left btn-icon" aria-hidden="true"></i>
+                    </button>
+                </form>
+
+                <!-- back-link: العودة من صفحة الاستعادة إلى تسجيل الدخول -->
+                <a class="back-link" id="loginBackFromForget" href="#">
+                    <i class="bi bi-chevron-right" aria-hidden="true"></i>
+                    <span>العودة لتسجيل الدخول</span>
+                </a>
+            </section>
+
+            <!--=========== step--validation: الشاشة الثانية للتحقق من الرمز =======================--> 
+            <section class="step step--validation" id="validationStep" aria-labelledby="validationTitle">
+                <!-- step-heading: عنوان ووصف صفحة التحقق -->
+                <div class="step-heading otp-heading">
+                    <p class="eyebrow">التحقق من البريد</p>
+                    <h2 class="page-title" id="validationTitle">أدخل رمز التحقق</h2>
+                    <p class="masked-email">
+                        تم إرسال رمز التحقق إلى
+                        <span class="mask-highlight" id="maskedEmail">mo34 ******</span>
+                    </p>
+                    <p class="step-description">أدخل رمز التحقق المرسل للتأكد من هويتك.</p>
+                </div>
+
+                <!-- otp-form: نموذج إدخال رمز التحقق -->
+                <form id="otpForm" novalidate>
+                  
+                    <!-- otp-inputs: مربعات إدخال أرقام التحقق -->
+                    <div class="otp-inputs" id="otpInputs" aria-label="رمز التحقق">
+                        <input class="otp-input" inputmode="numeric" maxlength="1" autocomplete="one-time-code" aria-label="الرقم 1">
+                        <input class="otp-input" inputmode="numeric" maxlength="1" aria-label="الرقم 2">
+                        <input class="otp-input" inputmode="numeric" maxlength="1" aria-label="الرقم 3">
+                        <input class="otp-input" inputmode="numeric" maxlength="1" aria-label="الرقم 4">
+                        <input class="otp-input" inputmode="numeric" maxlength="1" aria-label="الرقم 5">
+                    </div>
+
+                    <!-- otp-status: إعادة إرسال الرمز + الوقت -->
+                    <div class="otp-status">
+                        <span>لم يصلك الرمز؟</span>
+                        <button class="resend-btn" id="resendBtn" type="button" disabled>إعادة الإرسال</button>
+                        <span class="countdown" id="countdown">00:45</span>
+                    </div>
+
+                    <!-- validation-message: نتيجة فحص الرمز -->
+                    <p class="validation-message" id="otpValidationMessage" aria-live="polite"></p>
+
+                    <!-- primary-btn: تأكيد ومتابعة بعد إدخال الرمز -->
+                    <button style="width: 348px;" class="primary-btn" type="submit">
+                        <span>تأكيد ومتابعة</span>
+                        <i class="bi bi-arrow-left btn-icon" aria-hidden="true"></i>
+                    </button>
+                </form>
+                  
+                <!-- validation-footer: روابط العودة وإعادة إدخال البريد -->
+                <div class="validation-footer">
+                    <button class="footer-action" id="changeEmailBtn" type="button"><span>إعادة تعيين كلمة المرور</span></button>
+                    <span class="footer-separator">|</span>
+                    <a class="footer-action" id="loginBackFromValidation" href="#">العودة لتسجيل الدخول</a>
+                </div>
+            </section>
+        </div>
+    </main>
+</section>
+
+<section class="screen screen-reset" id="screen-reset" aria-hidden="true">
+<!-- auth-card: البطاقة الرئيسية الخاصة بإعادة تعيين كلمة المرور -->
+    <main class="auth-card" aria-labelledby="resetTitle">
+        <!-- brand: شعار واسم المنصة -->
+        <div class="brand">
+            <img class="brand__logo" src="assests/logo2.png" alt="Link Up Logo">
+            <span class="brand__name">Link Up</span>
+        </div>
+
+        <!-- step-heading: عنوان الصفحة ووصفها -->
+        <header class="step-heading">
+            <p class="eyebrow">كلمة مرور جديدة</p>
+            <h1 class="page-title" id="resetTitle">إعادة تعيين كلمة المرور</h1>
+            <p class="step-description">
+                يرجى إدخال كلمة المرور الجديدة وتأكيدها للمتابعة إلى حسابك.
+            </p>
+        </header>
+
+        <!-- auth-form: نموذج إدخال وتأكيد كلمة المرور الجديدة -->
+        <form class="auth-form" id="resetForm" novalidate>
+            <!-- input-group: حقل كلمة المرور الجديدة -->
+            <div class="input-group">
+                <label class="input-label" for="newPassword">كلمة المرور الجديدة</label>
+                <i class="bi bi-lock field-icon" aria-hidden="true"></i>
+                <input
+                    id="newPassword"
+                    name="newPassword"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                >
+                <!-- password-toggle: زر إظهار وإخفاء كلمة المرور الجديدة -->
+                <button class="password-toggle" type="button" data-target="newPassword" aria-label="إظهار كلمة المرور">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <!-- input-group: حقل تأكيد كلمة المرور -->
+            <div class="input-group">
+                <label class="input-label" for="confirmPassword">تأكيد كلمة المرور</label>
+                <i class="bi bi-lock field-icon" aria-hidden="true"></i>
+                <input
+                    id="confirmPassword"
+                    name="confirmPassword"
+                    type="password"
+                    autocomplete="new-password"
+                    minlength="8"
+                    required
+                >
+                <!-- password-toggle: زر إظهار وإخفاء كلمة المرور المؤكدة -->
+                <button class="password-toggle" type="button" data-target="confirmPassword" aria-label="إظهار كلمة المرور">
+                    <i class="bi bi-eye" aria-hidden="true"></i>
+                </button>
+            </div>
+
+            <!-- password-rules: ملاحظة شروط كلمة المرور المطلوبة -->
+            <div class="password-rules" aria-live="polite">
+                <i class="bi bi-info-circle password-rules__icon" aria-hidden="true"></i>
+                <span>يجب أن تحتوي على أحرف بالإضافة إلى أرقام وعلامات.</span>
+            </div>
+
+            <!-- validation-message: مكان عرض نتيجة التحقق من الحقول -->
+            <p class="validation-message" id="resetValidationMessage" aria-live="polite"></p>
+
+            <!-- primary-btn: زر حفظ كلمة المرور الجديدة -->
+            <button class="primary-btn" id="saveButton" type="submit">
+                <span>حفظ كلمة المرور والدخول</span>
+                <i class="bi bi-arrow-left btn-icon" aria-hidden="true"></i>
+            </button>
+        </form>
+
+        <!-- back-link: العودة إلى شاشة تسجيل الدخول -->
+        <a class="back-link" id="loginBackFromReset" href="#">
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            <span>العودة لتسجيل الدخول</span>
+        </a>
+    </main>
+</section>
+
+<script>
+    /* =========================================================
+       App navigation: التحكم في الانتقال بين الشاشات الثلاث
+       ========================================================= */
+    const screens = {
+        login: document.getElementById("screen-login"),
+        forget: document.getElementById("screen-forget"),
+        reset: document.getElementById("screen-reset")
+    };
+
+    /* showScreen: إظهار الشاشة المطلوبة وإخفاء باقي الشاشات */
+    function showScreen(name) {
+        Object.entries(screens).forEach(([key, screen]) => {
+            const isActive = key === name;
+            screen.classList.toggle("active", isActive);
+            screen.setAttribute("aria-hidden", String(!isActive));
+        });
+
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    /* =========================================================
+       Login screen: وظائف شاشة تسجيل الدخول
+       ========================================================= */
+    const loginPasswordToggle = document.getElementById("passwordToggle");
+    const loginPasswordInput = document.getElementById("password");
+    const loginForm = document.getElementById("loginForm");
+    const forgotLink = document.getElementById("forgotLink");
+
+    /* password toggle: إظهار وإخفاء كلمة المرور في تسجيل الدخول */
+    loginPasswordToggle.addEventListener("click", () => {
+        const isPassword = loginPasswordInput.type === "password";
+        loginPasswordInput.type = isPassword ? "text" : "password";
+        loginPasswordToggle.setAttribute(
+            "aria-label",
+            isPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
+        );
+        loginPasswordToggle.innerHTML = isPassword
+            ? '<i class="bi bi-eye-slash" aria-hidden="true"></i>'
+            : '<i class="bi bi-eye" aria-hidden="true"></i>';
+    });
+
+    /* login submit: منع إعادة تحميل الصفحة في نسخة الواجهة التجريبية */
+    loginForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+    });
+
+    /* forgot navigation: الانتقال من الدخول إلى استعادة كلمة المرور */
+    forgotLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        showScreen("forget");
+        setTimeout(() => recoveryEmail.focus(), 460);
+    });
+
+    /* =========================================================
+       Forget + Validation: وظائف شاشة نسيان كلمة المرور والتحقق
+       ========================================================= */
+    const steps = document.getElementById("steps");
+    const recoveryForm = document.getElementById("recoveryForm");
+    const recoveryEmail = document.getElementById("recoveryEmail");
+    const maskedEmail = document.getElementById("maskedEmail");
+    const otpInputs = [...document.querySelectorAll("#screen-forget .otp-input")];
+    const otpForm = document.getElementById("otpForm");
+    const otpValidationMessage = document.getElementById("otpValidationMessage");
+    const resendBtn = document.getElementById("resendBtn");
+    const countdown = document.getElementById("countdown");
+    const changeEmailBtn = document.getElementById("changeEmailBtn");
+    const loginBackFromForget = document.getElementById("loginBackFromForget");
+    const loginBackFromValidation = document.getElementById("loginBackFromValidation");
+
+    /* demo OTP: رمز تجريبي محلي للواجهة فقط */
+    const demoOtp = "12345";
+
+    /* timer state: حالة عداد إعادة إرسال الرمز */
+    let countdownValue = 45;
+    let countdownTimer;
+
+    /* maskEmail: إخفاء جزء من البريد قبل عرضه في شاشة التحقق */
+    function maskEmail(email) {
+        const [localPart, domain] = email.split("@");
+
+        if (!localPart || !domain) {
+            return "•••• ******";
+        }
+
+        const visible = localPart.slice(0, Math.min(2, localPart.length));
+        return `${visible}******@${domain}`;
+    }
+
+    /* startCountdown: بدء مؤقت إعادة إرسال الرمز */
+    function startCountdown() {
+        clearInterval(countdownTimer);
+        countdownValue = 45;
+        resendBtn.disabled = true;
+        countdown.textContent = `00:${String(countdownValue).padStart(2, "0")}`;
+
+        countdownTimer = setInterval(() => {
+            countdownValue -= 1;
+            countdown.textContent = `00:${String(countdownValue).padStart(2, "0")}`;
+
+            if (countdownValue <= 0) {
+                clearInterval(countdownTimer);
+                resendBtn.disabled = false;
+                countdown.textContent = "جاهز";
+            }
+        }, 1000);
+    }
+
+    /* clearOtp: تنظيف خانات رمز التحقق */
+    function clearOtp() {
+        otpInputs.forEach((input) => input.value = "");
+        otpInputs[0].focus();
+    }
+
+    /* showOtpValidation: عرض رسالة نجاح أو خطأ للتحقق من الرمز */
+    function showOtpValidation(message, type = "") {
+        otpValidationMessage.textContent = message;
+        otpValidationMessage.className = `validation-message ${type}`.trim();
+    }
+
+    /* recovery submit: الانتقال من إدخال البريد إلى شاشة التحقق */
+    recoveryForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        if (!recoveryEmail.checkValidity()) {
+            recoveryEmail.focus();
+            return;
+        }
+
+        maskedEmail.textContent = maskEmail(recoveryEmail.value.trim());
+        showOtpValidation("");
+        steps.classList.add("is-validation");
+        startCountdown();
+        clearOtp();
+    });
+
+    /* OTP behavior: التنقل التلقائي بين خانات الرمز */
+    otpInputs.forEach((input, index) => {
+        input.addEventListener("input", () => {
+            input.value = input.value.replace(/\D/g, "").slice(0, 1);
+            if (input.value && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener("keydown", (event) => {
+            if (event.key === "Backspace" && !input.value && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+
+            if (event.key === "ArrowLeft" && index > 0) {
+                otpInputs[index - 1].focus();
+            }
+
+            if (event.key === "ArrowRight" && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+
+        input.addEventListener("paste", (event) => {
+            const pasted = (event.clipboardData || window.clipboardData)
+                .getData("text")
+                .replace(/\D/g, "")
+                .slice(0, otpInputs.length);
+
+            if (!pasted) return;
+
+            event.preventDefault();
+            pasted.split("").forEach((digit, digitIndex) => {
+                otpInputs[digitIndex].value = digit;
+            });
+
+            otpInputs[Math.min(pasted.length, otpInputs.length) - 1].focus();
+        });
+    });
+
+    /* otp submit: التحقق من الرمز والانتقال إلى إعادة تعيين كلمة المرور */
+    otpForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const enteredOtp = otpInputs.map((input) => input.value).join("");
+
+        if (enteredOtp.length !== otpInputs.length) {
+            showOtpValidation("يرجى إدخال رمز التحقق كاملًا.", "error");
+            return;
+        }
+
+        if (enteredOtp !== demoOtp) {
+            showOtpValidation("رمز التحقق غير صحيح. جرّبي الرمز مرة أخرى.", "error");
+            clearOtp();
+            return;
+        }
+
+        showOtpValidation("تم التحقق بنجاح. جارٍ الانتقال...", "success");
+        clearInterval(countdownTimer);
+
+        setTimeout(() => {
+            steps.classList.remove("is-validation");
+            showScreen("reset");
+            newPassword.focus();
+        }, 450);
+    });
+
+    /* resend OTP: إعادة تفعيل تجربة إرسال رمز جديد */
+    resendBtn.addEventListener("click", () => {
+        showOtpValidation("تم إرسال رمز تحقق جديد.", "success");
+        clearOtp();
+        startCountdown();
+    });
+
+    /* change email: الانتقال من شاشة التحقق إلى شاشة إعادة تعيين كلمة المرور */
+    changeEmailBtn.addEventListener("click", () => {
+        steps.classList.remove("is-validation");
+        clearInterval(countdownTimer);
+        showOtpValidation("");
+
+        showScreen("reset");
+
+        setTimeout(() => newPassword.focus(), 460);
+    });
+
+    /* forget -> login: العودة إلى تسجيل الدخول */
+    [loginBackFromForget, loginBackFromValidation].forEach((link) => {
+        link.addEventListener("click", (event) => {
+            event.preventDefault();
+            steps.classList.remove("is-validation");
+            clearInterval(countdownTimer);
+            showScreen("login");
+        });
+    });
+
+    /* =========================================================
+       Reset screen: وظائف إعادة تعيين كلمة المرور
+       ========================================================= */
+    const resetPasswordToggles = document.querySelectorAll("#screen-reset .password-toggle");
+    const resetForm = document.getElementById("resetForm");
+    const newPassword = document.getElementById("newPassword");
+    const confirmPassword = document.getElementById("confirmPassword");
+    const resetValidationMessage = document.getElementById("resetValidationMessage");
+    const saveButton = document.getElementById("saveButton");
+    const loginBackFromReset = document.getElementById("loginBackFromReset");
+
+    /* password toggles: إظهار وإخفاء الحقلين في شاشة إعادة التعيين */
+    resetPasswordToggles.forEach((toggle) => {
+        toggle.addEventListener("click", () => {
+            const targetId = toggle.dataset.target;
+            const targetInput = document.getElementById(targetId);
+            const isPassword = targetInput.type === "password";
+
+            targetInput.type = isPassword ? "text" : "password";
+            toggle.setAttribute(
+                "aria-label",
+                isPassword ? "إخفاء كلمة المرور" : "إظهار كلمة المرور"
+            );
+            toggle.innerHTML = isPassword
+                ? '<i class="bi bi-eye-slash" aria-hidden="true"></i>'
+                : '<i class="bi bi-eye" aria-hidden="true"></i>';
+        });
+    });
+
+    /* isStrongPassword: فحص الحد الأدنى من قوة كلمة المرور */
+    function isStrongPassword(password) {
+        const hasLetters = /[A-Za-zأ-ي]/.test(password);
+        const hasNumbers = /\d/.test(password);
+        const hasSpecialCharacter = /[^A-Za-zأ-ي\d\s]/.test(password);
+
+        return password.length >= 8 && hasLetters && hasNumbers && hasSpecialCharacter;
+    }
+
+    /* showResetValidation: عرض رسالة نجاح أو خطأ في شاشة إعادة التعيين */
+    function showResetValidation(message, type = "") {
+        resetValidationMessage.textContent = message;
+        resetValidationMessage.className = `validation-message ${type}`.trim();
+    }
+
+    /* reset submit: التحقق من كلمة المرور وحفظها محليًا ثم العودة للدخول */
+    resetForm.addEventListener("submit", (event) => {
+        event.preventDefault();
+
+        const password = newPassword.value.trim();
+        const confirmation = confirmPassword.value.trim();
+
+        if (!isStrongPassword(password)) {
+            showResetValidation(
+                "كلمة المرور يجب أن تحتوي على 8 أحرف على الأقل، مع أرقام وعلامة خاصة.",
+                "error"
+            );
+            newPassword.focus();
+            return;
+        }
+
+        if (password !== confirmation) {
+            showResetValidation("كلمتا المرور غير متطابقتين.", "error");
+            confirmPassword.focus();
+            return;
+        }
+
+        showResetValidation("تم حفظ كلمة المرور بنجاح. جارٍ العودة لتسجيل الدخول...", "success");
+        saveButton.disabled = true;
+
+        setTimeout(() => {
+            resetForm.reset();
+            saveButton.disabled = false;
+            showResetValidation("");
+            showScreen("login");
+        }, 900);
+    });
+
+    /* reset -> login: العودة إلى شاشة تسجيل الدخول يدويًا */
+    loginBackFromReset.addEventListener("click", (event) => {
+        event.preventDefault();
+        showScreen("login");
+    });
+
+    /* =========================================================
+       Initial state: بدء التطبيق من شاشة تسجيل الدخول
+       ========================================================= */
+    showScreen("login");
+</script>
+
+</body>
+</html>
